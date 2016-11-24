@@ -32,17 +32,19 @@ router.route('/users').post(function(req, res) {
 	user.age = req.body.age;
 
 	user.save(function(err) {
-		if (err)
+		if (err) {
 			res.status(500).json({ message: err });
-		else 
+		} else { 
 			res.json({ message: 'User created!' });
+		}
 	});
 }).get(function(req, res) {
 	User.find(function(err, users) {
-		if (err)
+		if (err) {
 			res.status(500).json({ message: err });
-		else
+		} else {
 			res.json(users);
+		}
 	});	
 });
 
@@ -60,6 +62,8 @@ router.route('/users/:user_id').get(function(req, res) {
 	User.findById(req.params.user_id, function(err, user) {
 		if (err) {
 			res.status(500).json({ message: err});
+		} else if (user == null) {
+			res.status(404).json({ message: 'User not found!'});
 		} else {
 			var twitter_id = req.body.twitter_id;
 			if (twitter_id != null) {
@@ -69,19 +73,23 @@ router.route('/users/:user_id').get(function(req, res) {
 			user.age = req.body.age;
 
 			user.save(function(err) {
-				if (err)
+				if (err) {
 					res.status(500).json({ message: err });
-				else 
+				} else { 
 					res.json({ message: 'User updated!' });
+				}
 			});
 		}
 	});		
 }).delete(function(req, res) {
 	User.remove({_id: req.params.user_id}, function(err, user) {
-		if (err)
+		if (err) {
 			res.status(500).json({ message: err });
-		else
+		} else if (user == null) {
+			res.status(404).json({ message: 'User not found!'});
+		} else {
 			res.json({ message: 'Successfully deleted!' });
+		}
 	});	
 });
 
